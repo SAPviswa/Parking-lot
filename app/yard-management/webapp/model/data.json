@@ -1,0 +1,63 @@
+{
+	"selectedKey": "Page1",
+	"navigation": [
+		{
+			"title": "All Slots",
+			"icon": "sap-icon://dimension",
+			"expanded": true,
+			"key": "Page1"
+		},
+		{
+			"title": "Assigned Slots",
+			"icon": "sap-icon://activity-assigned-to-goal",
+            "expanded": true,
+			"key": "page2"
+		},
+
+		{
+			"title": "Parking-lot allocation",
+			"icon": "sap-icon://shipping-status",
+			"expanded": true,
+            "key": "page3"
+			
+		},
+		{
+			"title": "History",
+			"icon": "sap-icon://history",
+			"expanded": true,
+            "key": "Page4"
+			
+		},
+		{
+			"title": "Data visualization",
+			"icon": "sap-icon://pie-chart",
+			"expanded": true,
+            "key": "Page5"
+		},
+		{
+			"title": "Reservation",
+			"icon": "sap-icon://select-appointments",
+			"expanded": true,
+            "key": "Page6"
+		},
+		
+		{
+			"title": "Root Item",
+			"icon": "sap-icon://bookmark",
+			"expanded": false,
+			"items": [
+				{
+					"title": "Child Item 1"
+				},
+				{
+					"title": "Child Item 2"
+				},
+				{
+					"title": "Child Item 3"
+				}
+			]
+		}
+	],
+	"rows": []
+	
+}

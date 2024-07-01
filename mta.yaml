@@ -1,0 +1,143 @@
+_schema-version: "3.1"
+ID: parking-lot_management
+description: A simple CAP project.
+version: 1.0.0
+modules:
+  - name: parking-lot_management-srv
+    type: nodejs
+    path: gen/srv
+    requires:
+      - name: parking-lot_management-db
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
+    parameters:
+      buildpack: nodejs_buildpack
+      readiness-health-check-http-endpoint: /health
+      readiness-health-check-type: http
+    build-parameters:
+      builder: npm
+  - name: parking-lot_management-db-deployer
+    type: hdb
+    path: gen/db
+    requires:
+      - name: parking-lot_management-db
+    parameters:
+      buildpack: nodejs_buildpack
+  - name: parking-lot_management-destination-content
+    type: com.sap.application.content
+    requires:
+      - name: parking-lot_management-destination-service
+        parameters:
+          content-target: true
+      - name: parking-lot_management_html_repo_host
+        parameters:
+          service-key:
+            name: parking-lot_management_html_repo_host-key
+      - name: uaa_parking-lot_management
+        parameters:
+          service-key:
+            name: uaa_parking-lot_management-key
+    parameters:
+      content:
+        instance:
+          destinations:
+            - Name: yard_management_parking_lot_management_html_repo_host
+              ServiceInstanceName: parking-lot_management-html5-app-host-service
+              ServiceKeyName: parking-lot_management_html_repo_host-key
+              sap.cloud.service: yard-management
+            - Authentication: OAuth2UserTokenExchange
+              Name: yard_management_uaa_parking_lot_management
+              ServiceInstanceName: parking-lot_management-xsuaa-service
+              ServiceKeyName: uaa_parking-lot_management-key
+              sap.cloud.service: yard-management
+          existing_destinations_policy: ignore
+    build-parameters:
+      no-source: true
+  - name: parking-lot_management-app-content
+    type: com.sap.application.content
+    path: .
+    requires:
+      - name: parking-lot_management_html_repo_host
+        parameters:
+          content-target: true
+    build-parameters:
+      build-result: resources
+      requires:
+        - artifacts:
+            - comappparkinglotmanagement.zip
+          name: comappparkinglotmanagement
+          target-path: resources/
+        - artifacts:
+            - comappyardmanagement.zip
+          name: comappyardmanagement
+          target-path: resources/
+  - name: comappparkinglotmanagement
+    type: html5
+    path: app/parking-lot_management
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - npm run build:cf
+      supported-platforms:
+        []
+  - name: comappyardmanagement
+    type: html5
+    path: app/yard-management
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - npm run build:cf
+      supported-platforms:
+        []
+resources:
+  - name: parking-lot_management-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
+  - name: parking-lot_management-destination-service
+    type: org.cloudfoundry.managed-service
+    parameters:
+      config:
+        HTML5Runtime_enabled: true
+        init_data:
+          instance:
+            destinations:
+              - Authentication: NoAuthentication
+                Name: ui5
+                ProxyType: Internet
+                Type: HTTP
+                URL: https://ui5.sap.com
+            existing_destinations_policy: update
+        version: 1.0.0
+      service: destination
+      service-name: parking-lot_management-destination-service
+      service-plan: lite
+  - name: parking-lot_management_html_repo_host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-name: parking-lot_management-html5-app-host-service
+      service-plan: app-host
+  - name: uaa_parking-lot_management
+    type: org.cloudfoundry.managed-service
+    parameters:
+      path: ./xs-security.json
+      service: xsuaa
+      service-name: parking-lot_management-xsuaa-service
+      service-plan: application
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm ci
+        - npx cds build --production

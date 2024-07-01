@@ -1,0 +1,465 @@
+<mvc:View
+    controllerName="com.app.yardmanagement.controller.Entrance"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns:tnt="sap.tnt"
+    height="100%"
+    displayBlock="true"
+>
+    <tnt:ToolPage id="toolPage">
+        <tnt:header>
+            <tnt:ToolHeader id="toolHeader">
+                <Button
+                    id="sideNavigationToggleButton"
+                    icon="sap-icon://menu2"
+                    type="Transparent"
+                    press=".onSideNavButtonPress"
+                >
+                    <layoutData>
+                        <OverflowToolbarLayoutData
+                            id="idNeverOverflow0"
+                            priority="NeverOverflow"
+                        />
+                    </layoutData>
+                </Button>
+
+                <ToolbarSpacer
+                    id="toolbarSpacer1"
+                    width="20px"
+                />
+                <tnt:ToolHeaderUtilitySeparator
+                    id="toolHeaderUtilitySeparator"
+                />
+                <ToolbarSpacer id="toolbarSpacer2">
+                    <layoutData>
+                        <OverflowToolbarLayoutData
+                            id="idNeverOverflow1"
+                            priority="NeverOverflow"
+                            minWidth="20px"
+                        />
+                    </layoutData>
+                </ToolbarSpacer>
+
+                <Image
+                    id="sapLogo"
+                    height="1.5rem"
+                    class="sapUiSmallMarginBegin"
+                    src="https://www.sap.com/dam/application/shared/logos/sap-logo-svg.svg"
+                />
+            </tnt:ToolHeader>
+        </tnt:header>
+        <tnt:sideContent>
+            <tnt:SideNavigation
+                id="sideNavigation"
+                expanded="true"
+                selectedKey="{/selectedKey}"
+                itemSelect=".onItemSelect"
+            >
+                <tnt:NavigationList
+                    id="navigationList"
+                    items="{path: '/navigation'}"
+                >
+                    <tnt:NavigationListItem
+                        id="navigationListItem"
+                        text="{title}"
+                        icon="{icon}"
+                        enabled="{enabled}"
+                        expanded="{expanded}"
+                        items="{items}"
+                        key="{key}"
+                    >
+                        <tnt:NavigationListItem
+                            id="subNavigationListItem"
+                            text="{title}"
+                            key="{key}"
+                            enabled="{enabled}"
+                        />
+                    </tnt:NavigationListItem>
+                </tnt:NavigationList>
+                <tnt:fixedItem>
+                    <tnt:NavigationList
+                        id="fixedNavigationList"
+                        items="{path: '/fixedNavigation'}"
+                    >
+                        <tnt:NavigationListItem
+                            id="fixedNavigationListItem"
+                            text="{title}"
+                            icon="{icon}"
+                        />
+                    </tnt:NavigationList>
+                </tnt:fixedItem>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+        <tnt:mainContents>
+            <NavContainer
+                id="pageContainer"
+                initialPage="Page1"
+            >
+                <pages>
+                    <ScrollContainer
+                        id="Page1"
+                        horizontal="false"
+                        vertical="true"
+                        height="100%"
+                        class="sapUiContentPadding"
+                    >
+                         <Table
+                            id="allSlotsTable"
+                            mode="SingleSelectMaster"
+                            alternateRowColors="true"
+                            items="{/rows}"
+                        >
+                            <headerToolbar>
+                                <Toolbar id="allSlotstableToolbar">
+                                    <Title
+                                        id="allSlotstableTitle"
+                                        text="All slots"
+                                        titleStyle="H3"
+                                    />
+                                    <ToolbarSpacer id="toolbarspacer1"></ToolbarSpacer>
+                                    <SearchField id="SearchField1" width="12rem" placeholder="Search" search=".onSearch" />
+                                    <Button id="_IDGenButton1" text="Add New Slot" type="Attention" press=".onAddButtonPress" />
+                                </Toolbar>
+                            </headerToolbar>
+                            <columns>
+                                <Column id="allSlotscolumn1">
+                                    <Text
+                                        id="allSlotscolumn1Text"
+                                        text="Slot no"
+                                    />
+                                </Column>
+                                <Column id="allSlotscolumn2">
+                                    <Text
+                                        id="allSlotscolumn2Text"
+                                        text="Type"
+                                    />
+                                </Column>
+
+                            </columns>
+                            <items>
+                                <ColumnListItem id="allSlotscolumnListItem">
+                                    <cells>
+                                        <Text
+                                            id="allSlotscellText1"
+                                            text="{slotno}"
+                                        />
+                                        <Text
+                                            id="allSlotscellText2"
+                                            text="{type}"
+                                        />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </ScrollContainer>
+                    <Dialog id="addDialog" title="Add New Slot" class="sapUiContentPadding" contentHeight="20%">
+                        <content>
+                            <VBox id="_IDGenVBox1">
+                                <Label id="inputSlotNoLabel" text="Slot no" />
+                                <Input id="inputSlotNo" />
+                                <Label id="inputTypeLabel" text="Type" />
+                                <ComboBox id="inputType" width="100%">
+                                    <core:Item id="_IDGenItem1" key="Inward" text="Inward"/>
+                                    <core:Item id="_IDGenItem2" key="Outward" text="Outward"/>
+                                </ComboBox>
+                            </VBox>
+                        </content>
+                        <buttons>
+                            <Button id="saveButton" text="Save" press=".onSaveDialog" type="Accept"/>
+                            <Button id="cancelButton" text="Cancel" press=".onCancelDialog" />
+                        </buttons>
+                    </Dialog>
+                    <ScrollContainer
+                        id="page2"
+                        horizontal="false"
+                        vertical="true"
+                        height="100%"
+                        class="sapUiContentPadding"
+                    >
+
+                        <Table
+                            id="assignedSlotsTable"
+                            inset="false"
+                            items="{/rows}"
+                        >
+                            <headerToolbar>
+                                <Toolbar id="assignedSlotstableToolbar">
+                                    <Title
+                                        id="assignedSlotstableTitle"
+                                        text="Assigned Slots"
+                                        titleStyle="H3"
+                                    />
+                                    <ToolbarSpacer id="toolbarspacer"></ToolbarSpacer>
+                                    <SearchField id="SearchField2" width="12rem" placeholder="Search" search="onSearch" />
+                                    <Button id="_IDGenButton4" class="black-background" text="Un-assigned" type="Emphasized" />
+                                    <Button id="_IDGenButton5" text="Export" type="Emphasized" icon="sap-icon://excel-attachment"></Button>
+                                    <Button id="_IDGenButton6" text="Print" type="Emphasized"></Button>
+
+                                </Toolbar>
+                            </headerToolbar>
+
+                            <columns>
+                                <Column id="assignedSlotscolumn1">
+                                    <Text
+                                        id="assignedSlotscolumn1Text"
+                                        text="Slot no"
+                                    />
+                                </Column>
+                                <Column id="assignedSlotscolumn2">
+                                    <Text
+                                        id="assignedSlotscolumn2Text"
+                                        text="Type (Inward / Out-ward)"
+                                    />
+                                </Column>
+                                <Column id="assignedSlotscolumn3">
+                                    <Text
+                                        id="assignedSlotscolumn3Text"
+                                        text="Driver name"
+                                    />
+                                </Column>
+                                <Column id="assignedSlotscolumn4">
+                                    <Text
+                                        id="assignedSlotscolumn4Text"
+                                        text="Phone number"
+                                    />
+                                </Column>
+                                <Column id="assignedSlotscolumn5">
+                                    <Text
+                                        id="assignedSlotscolumn5Text"
+                                        text="Vehicle no"
+                                    />
+                                </Column>
+                                <Column id="assignedSlotscolumn6">
+                                    <Text
+                                        id="assignedSlotscolumn6Text"
+                                        text="Date"
+                                    />
+                                </Column>
+                                <Column id="assignedSlotscolumn7">
+                                    <Text
+                                        id="assignedSlotscolumn7Text"
+                                        text="Time"
+                                    />
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem id="assignedSlotscolumnListItem">
+                                    <cells>
+                                        <Text
+                                            id="assignedSlotscellText1"
+                                            text="{col1}"
+                                        />
+                                        <Text
+                                            id="assignedSlotscellText2"
+                                            text="{col2}"
+                                        />
+                                        <Text
+                                            id="assignedSlotscellText3"
+                                            text="{col3}"
+                                        />
+                                        <Text
+                                            id="assignedSlotscellText4"
+                                            text="{col4}"
+                                        />
+                                        <Text
+                                            id="assignedSlotscellText5"
+                                            text="{col5}"
+                                        />
+                                        <Text
+                                            id="assignedSlotscellText6"
+                                            text="{col6}"
+                                        />
+                                        <Text
+                                            id="assignedSlotscellText7"
+                                            text="{col7}"
+                                        />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </ScrollContainer>
+                    
+                    
+                    
+                    
+                    <ScrollContainer
+                        id="page3"
+                        horizontal="true"
+                        vertical="false"
+                        height="100%"
+                        class="sapUiContentPadding"
+                    >
+
+                        <VBox
+                            id="historyForm"
+                            class="sapUiSmallMargin"
+                            width="30%"
+                            justifyContent="Center"
+                            backgroundDesign="Solid"
+                        >
+                        <Text
+                            id="ParkinglotText"
+                            text="Parking-lot allocation"
+                            class="parkinglotText"
+                        />
+                            <Label id="_IDLabel1" text="Vehicle no" />
+                            <Input id="_IDInput1" value=""/>
+                            <Label id="_IDLabel2" text="Driver name" />
+                            <Input id="_IDInput2" value=""/>
+                            <Label id="_IDLabel3" text="Phone no" />
+                            <Input id="_IDInput3" value=""/>
+                            <Label id="_IDLabel4" text="Parking-lot no" />
+                            <ComboBox id="_IDInput4" items="" width="100%">
+                                <core:Item id="_IDGenItem3" key="{key}" text="{text}"/>
+                            </ComboBox>
+                            <Label id="_IDLabel5" text="Vehicle Type" />
+                            <ComboBox id="_IDInput5" width="100%">
+                                <core:Item id="_IDGenItem4" key="Inward" text="Inward"/>
+                                <core:Item id="_IDGenItem5" key="Outward" text="Outward"/>
+                            </ComboBox>
+                            <VBox id="_IDGenVBox2" alignItems="End">
+                            <Button id="_IDGenButton7" text="Assign" type="Emphasized"></Button>
+                            </VBox>
+                        </VBox>
+                        
+                    </ScrollContainer>
+
+
+
+                    <ScrollContainer
+                        id="Page4"
+                        horizontal="false"
+                        vertical="true"
+                        height="100%"
+                        class="sapUiContentPadding"
+                    >
+
+                        <Table
+                            id="historyTable"
+                            inset="false"
+                            items="{/rows}"
+                        >
+                            <headerToolbar>
+                                <Toolbar id="historytableToolbar">
+                                    <Title
+                                        id="historytableTitle"
+                                        text="History"
+                                        titleStyle="H3"
+                                    />
+                                    <ToolbarSpacer id="toolbarspacer3"></ToolbarSpacer>
+                                    <SearchField id="SearchField3" width="12rem" placeholder="Search" search="onSearch" />
+                                    <Button id="_IDGenButton8" text="Export" type="Emphasized" icon="sap-icon://excel-attachment"></Button>
+                                    <Button id="_IDGenButton9" text="Print" type="Emphasized"></Button>
+                                </Toolbar>
+                            </headerToolbar>
+                            <columns>
+                                <Column id="historycolumn1">
+                                    <Text
+                                        id="historycolumn1Text"
+                                        text="Slot no"
+                                    />
+                                </Column>
+                                <Column id="historycolumn2">
+                                    <Text
+                                        id="historycolumn2Text"
+                                        text="Type (Inward / Out-ward)"
+                                    />
+                                </Column>
+                                <Column id="historycolumn3">
+                                    <Text
+                                        id="historyscolumn3Text"
+                                        text="Driver name"
+                                    />
+                                </Column>
+                                <Column id="historycolumn4">
+                                    <Text
+                                        id="historycolumn4Text"
+                                        text="Phone number"
+                                    />
+                                </Column>
+                                <Column id="historycolumn5">
+                                    <Text
+                                        id="historycolumn5Text"
+                                        text="Vehicle no"
+                                    />
+                                </Column>
+                                <Column id="historycolumn6">
+                                    <Text
+                                        id="historycolumn6Text"
+                                        text="Assigned (Date / Time)"
+                                    />
+                                </Column>
+                                <Column id="historycolumn7">
+                                    <Text
+                                        id="historycolumn7Text"
+                                        text="Un-Assigned (Date / Time)"
+                                    />
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem id="historycolumnListItem">
+                                    <cells>
+                                        <Text
+                                            id="historycellText1"
+                                            text="{col1}"
+                                        />
+                                        <Text
+                                            id="historycellText2"
+                                            text="{col2}"
+                                        />
+                                        <Text
+                                            id="historycellText3"
+                                            text="{col3}"
+                                        />
+                                        <Text
+                                            id="historycellText4"
+                                            text="{col4}"
+                                        />
+                                        <Text
+                                            id="historycellText5"
+                                            text="{col5}"
+                                        />
+                                        <Text
+                                            id="historycellText6"
+                                            text="{col6}"
+                                        />
+                                        <Text
+                                            id="historycellText7"
+                                            text="{col7}"
+                                        />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </ScrollContainer>
+                    <ScrollContainer
+                        id="Page5"
+                        horizontal="false"
+                        vertical="true"
+                        height="100%"
+                        class="sapUiContentPadding"
+                    >
+                        <Text
+                            id="Page5Text"
+                            text="Data visualization page"
+                        />
+                    </ScrollContainer>
+
+                     <ScrollContainer
+                        id="Page6"
+                        horizontal="false"
+                        vertical="true"
+                        height="100%"
+                        class="sapUiContentPadding"
+                    >
+                        <Text
+                            id="Pag6Text"
+                            text="Reservation"
+                        />
+                    </ScrollContainer>
+                </pages>
+            </NavContainer>
+        </tnt:mainContents>
+    </tnt:ToolPage>
+</mvc:View>
