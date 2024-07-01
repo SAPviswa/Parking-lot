@@ -1,2 +1,5 @@
-slotno,type
-SP01,Inward
+slotno,type,parkinglotAssign_vehicleNo
+SP01,Inward,VH001
+SP02,Inward,VH002
+SP03,Inward,
+SP04,Outward,

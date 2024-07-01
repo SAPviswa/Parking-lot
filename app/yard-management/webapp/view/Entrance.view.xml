@@ -23,11 +23,12 @@
                         />
                     </layoutData>
                 </Button>
-
+                <Title id="idTitletext" text="Parking-lot Management" ></Title>
                 <ToolbarSpacer
                     id="toolbarSpacer1"
                     width="20px"
                 />
+                
                 <tnt:ToolHeaderUtilitySeparator
                     id="toolHeaderUtilitySeparator"
                 />
@@ -40,7 +41,10 @@
                         />
                     </layoutData>
                 </ToolbarSpacer>
-
+                <Button 
+                    id="idNotifications"
+                    icon="sap-icon://bell-2"
+                ></Button>
                 <Image
                     id="sapLogo"
                     height="1.5rem"
@@ -53,42 +57,48 @@
             <tnt:SideNavigation
                 id="sideNavigation"
                 expanded="true"
-                selectedKey="{/selectedKey}"
-                itemSelect=".onItemSelect"
+                itemSelect=".onSelectItem"
             >
-                <tnt:NavigationList
-                    id="navigationList"
-                    items="{path: '/navigation'}"
-                >
+                <tnt:NavigationList id="navigationList">
                     <tnt:NavigationListItem
-                        id="navigationListItem"
-                        text="{title}"
-                        icon="{icon}"
-                        enabled="{enabled}"
-                        expanded="{expanded}"
-                        items="{items}"
-                        key="{key}"
-                    >
-                        <tnt:NavigationListItem
-                            id="subNavigationListItem"
-                            text="{title}"
-                            key="{key}"
-                            enabled="{enabled}"
-                        />
-                    </tnt:NavigationListItem>
+                        id="navigationAllSlots"
+                        icon="sap-icon://dimension"
+                        key="AllSlots"
+                        text="All Slots"
+                    />
+
+                    <tnt:NavigationListItem
+                        id="navigationAssigned"
+                        icon="sap-icon://activity-assigned-to-goal"
+                        key="AssignedSlots"
+                        text="Assigned Slots"
+                    />
+                    <tnt:NavigationListItem
+                        id="navigationParkinglotallocation"
+                        icon="sap-icon://shipping-status"
+                        key="Parking-lotAllocation"
+                        text="Parking-lot Allocation"
+                    />
+
+                    <tnt:NavigationListItem
+                    id="navigationHistory"
+                    icon="sap-icon://history"
+                    key="History"
+                    text="History"
+                    />
+                    <tnt:NavigationListItem
+                    id="navigationDataVisualization"
+                    icon="sap-icon://pie-chart"
+                    key="DataVisualization"
+                    text="Data Visualization"
+                    />
+                    <tnt:NavigationListItem
+                    id="navigationDataReservations"
+                    icon="sap-icon://select-appointments"
+                    key="Reservations"
+                    text="Reservations"
+                    />
                 </tnt:NavigationList>
-                <tnt:fixedItem>
-                    <tnt:NavigationList
-                        id="fixedNavigationList"
-                        items="{path: '/fixedNavigation'}"
-                    >
-                        <tnt:NavigationListItem
-                            id="fixedNavigationListItem"
-                            text="{title}"
-                            icon="{icon}"
-                        />
-                    </tnt:NavigationList>
-                </tnt:fixedItem>
             </tnt:SideNavigation>
         </tnt:sideContent>
         <tnt:mainContents>
@@ -104,11 +114,11 @@
                         height="100%"
                         class="sapUiContentPadding"
                     >
-                         <Table
+                        <Table
                             id="allSlotsTable"
                             mode="SingleSelectMaster"
                             alternateRowColors="true"
-                            items="{/rows}"
+                            items="{/Parkingslots}"
                         >
                             <headerToolbar>
                                 <Toolbar id="allSlotstableToolbar">
@@ -118,8 +128,8 @@
                                         titleStyle="H3"
                                     />
                                     <ToolbarSpacer id="toolbarspacer1"></ToolbarSpacer>
-                                    <SearchField id="SearchField1" width="12rem" placeholder="Search" search=".onSearch" />
-                                    <Button id="_IDGenButton1" text="Add New Slot" type="Attention" press=".onAddButtonPress" />
+                                    <SearchField id="SearchField1" width="12rem" placeholder="Search" search="onSearch" />
+                                    <!-- <Button id="_IDGenButton1" text="Add New Slot" type="Attention" press=".onAddButtonPress" /> -->
                                 </Toolbar>
                             </headerToolbar>
                             <columns>
@@ -171,7 +181,7 @@
                         </buttons>
                     </Dialog>
                     <ScrollContainer
-                        id="page2"
+                        id="Page2"
                         horizontal="false"
                         vertical="true"
                         height="100%"
@@ -181,7 +191,7 @@
                         <Table
                             id="assignedSlotsTable"
                             inset="false"
-                            items="{/rows}"
+                            items="{/Parkinglotassign}"
                         >
                             <headerToolbar>
                                 <Toolbar id="assignedSlotstableToolbar">
@@ -193,7 +203,7 @@
                                     <ToolbarSpacer id="toolbarspacer"></ToolbarSpacer>
                                     <SearchField id="SearchField2" width="12rem" placeholder="Search" search="onSearch" />
                                     <Button id="_IDGenButton4" class="black-background" text="Un-assigned" type="Emphasized" />
-                                    <Button id="_IDGenButton5" text="Export" type="Emphasized" icon="sap-icon://excel-attachment"></Button>
+                                    <Button id="_IDGenButton5" text="Export" type="Emphasized" icon="sap-icon://excel-attachment" press="onExport"></Button>
                                     <Button id="_IDGenButton6" text="Print" type="Emphasized"></Button>
 
                                 </Toolbar>
@@ -248,31 +258,31 @@
                                     <cells>
                                         <Text
                                             id="assignedSlotscellText1"
-                                            text="{col1}"
+                                            text="{parkingslots_slotno}"
                                         />
                                         <Text
                                             id="assignedSlotscellText2"
-                                            text="{col2}"
+                                            text="{parkingslots/type}"
                                         />
                                         <Text
                                             id="assignedSlotscellText3"
-                                            text="{col3}"
+                                            text="{driverName}"
                                         />
                                         <Text
                                             id="assignedSlotscellText4"
-                                            text="{col4}"
+                                            text="{PhoneNo}"
                                         />
                                         <Text
                                             id="assignedSlotscellText5"
-                                            text="{col5}"
+                                            text="{vehicleNo}"
                                         />
                                         <Text
                                             id="assignedSlotscellText6"
-                                            text="{col6}"
+                                            text="{time}"
                                         />
                                         <Text
                                             id="assignedSlotscellText7"
-                                            text="{col7}"
+                                            text="{time}"
                                         />
                                     </cells>
                                 </ColumnListItem>
@@ -284,7 +294,7 @@
                     
                     
                     <ScrollContainer
-                        id="page3"
+                        id="Page3"
                         horizontal="true"
                         vertical="false"
                         height="100%"
@@ -292,7 +302,7 @@
                     >
 
                         <VBox
-                            id="historyForm"
+                            id="slotAllocationForm"
                             class="sapUiSmallMargin"
                             width="30%"
                             justifyContent="Center"
@@ -338,7 +348,7 @@
                         <Table
                             id="historyTable"
                             inset="false"
-                            items="{/rows}"
+                            items=""
                         >
                             <headerToolbar>
                                 <Toolbar id="historytableToolbar">
@@ -402,31 +412,31 @@
                                     <cells>
                                         <Text
                                             id="historycellText1"
-                                            text="{col1}"
+                                            text="{}"
                                         />
                                         <Text
                                             id="historycellText2"
-                                            text="{col2}"
+                                            text="{}"
                                         />
                                         <Text
                                             id="historycellText3"
-                                            text="{col3}"
+                                            text="{}"
                                         />
                                         <Text
                                             id="historycellText4"
-                                            text="{col4}"
+                                            text="{}"
                                         />
                                         <Text
                                             id="historycellText5"
-                                            text="{col5}"
+                                            text="{}"
                                         />
                                         <Text
                                             id="historycellText6"
-                                            text="{col6}"
+                                            text="{}"
                                         />
                                         <Text
                                             id="historycellText7"
-                                            text="{col7}"
+                                            text="{}"
                                         />
                                     </cells>
                                 </ColumnListItem>

@@ -8,9 +8,10 @@ entity Parkingslots {
         Inward;
         Outward;
       };
+      parkinglotAssign : Association to Parkinglotassign;
 }
 
-entity Parkinglot_Assign {
+entity Parkinglotassign {
   key vehicleNo    : String;
       driverName   : String;
       PhoneNo      : String;
@@ -22,12 +23,12 @@ entity Parkinglot_Assign {
 entity Parkinglot_UnAssign : cuid {
   status           : String;
   time             : DateTime;
-  parkinglotassign : Association to Parkinglot_Assign;
+  parkinglotAssign : Association to Parkinglotassign;
 }
 
 entity ParkingHistory : cuid {
   parkingslots       : Association to Parkingslots;
-  parkinglotassign   : Association to Parkinglot_Assign;
+  parkinglotAssign   : Association to Parkinglotassign;
   parkinglotunassign : Association to Parkinglot_UnAssign;
   event              : String; // Description of the event or change
 }

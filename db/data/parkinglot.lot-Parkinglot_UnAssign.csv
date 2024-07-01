@@ -1,1 +1,5 @@
-ID,status,time,parkinglotassign_vehicleNo
+ID,status,time,parkinglotAssign_vehicleNo
+e3159ab6-3779-11ef-9f40-325096b39f47,Unassigned,2024-07-01T11:00:00Z,VH001
+e3159e6c-3779-11ef-8563-325096b39f47,Unassigned,2024-07-01T13:00:00Z,VH002
+e3159f02-3779-11ef-aaab-325096b39f47,Unassigned,2024-07-01T15:00:00Z,VH003
+e3159f5c-3779-11ef-b283-325096b39f47,Unassigned,2024-07-01T16:30:00Z,VH004

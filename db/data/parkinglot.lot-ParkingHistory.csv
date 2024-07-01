@@ -1,1 +1,5 @@
-ID,parkingslots_slotno,parkinglotassign_vehicleNo,parkinglotunassign_ID,event
+ID,parkingslots_slotno,parkinglotAssign_vehicleNo,parkinglotunassign_ID,event
+e315a042-3779-11ef-a0aa-325096b39f47,SP01,VH001,e3159ab6-3779-11ef-9f40-325096b39f47,
+e315a088-3779-11ef-ac60-325096b39f47,SP02,VH002,e3159e6c-3779-11ef-8563-325096b39f47,
+e315a0d8-3779-11ef-b815-325096b39f47,SP03,VH003,e3159f02-3779-11ef-aaab-325096b39f47,
+e315a128-3779-11ef-a837-325096b39f47,SP04,VH004,e3159f5c-3779-11ef-b283-325096b39f47,

@@ -6,22 +6,55 @@ sap.ui.define([
     "sap/m/Button",
     "sap/m/library",
     "sap/m/MessageToast",
-    "sap/m/MessageBox"
+    "sap/m/MessageBox",
+    "sap/ui/export/library",
+    "sap/ui/export/Spreadsheet"
 
-], function (Device, Controller, JSONModel, Popover, Button, library, MessageToast,MessageBox) {
+], function (Device, Controller, JSONModel, Popover, Button, library, MessageToast,MessageBox,exportLibrary,Spreadsheet) {
     "use strict";
-
+    var EdmType = exportLibrary.EdmType;
     return Controller.extend("com.app.yardmanagement.controller.Entrance", {
 
         onInit: function () {
-            var oModel = new JSONModel(sap.ui.require.toUrl("com/app/yardmanagement/model/data.json"));
-            this.getView().setModel(oModel);
-            this._setToggleButtonTooltip(!Device.system.desktop);
+            
+        },
+        createColumnConfig: function() {
+            return [
+                { label: 'Slot no', property: 'parkingslots_slotno', type: EdmType.String },
+                { label: 'Type (Inward / Outward)', property: 'parkingslots/type', type: EdmType.String },
+                { label: 'Driver name', property: 'driverName', type: EdmType.String},
+                { label: 'Phone no', property: 'PhoneNo', type: EdmType.String },
+                { label: 'Vehicle no', property: 'vehicleNo', type: EdmType.String },
+                { label: 'Time', property: 'time', type: EdmType.String},
+                { label: 'Time', property: 'time', type: EdmType.String }
+            ];
         },
 
-        onItemSelect: function (oEvent) {
-            var oItem = oEvent.getParameter("item");
-            this.byId("pageContainer").to(this.getView().createId(oItem.getKey()));
+
+        onSelectItem: function (oEvent) {
+            var oItem = oEvent.getParameter("item").getKey();
+            var navContainer = this.getView().byId("pageContainer");
+
+            switch (oItem) {
+                case "AllSlots":
+                    navContainer.to(this.getView().createId("Page1"));
+                    break;
+                case "AssignedSlots":
+                    navContainer.to(this.getView().createId("Page2"));
+                    break;
+                case "Parking-lotAllocation":
+                    navContainer.to(this.getView().createId("Page3"));
+                    break;
+                case "History":
+                    navContainer.to(this.getView().createId("Page4"));
+                    break;
+                case "DataVisualization":
+                    navContainer.to(this.getView().createId("Page5"));
+                    break;
+                case "Reservations":
+                    navContainer.to(this.getView().createId("Page6"));
+                    break;
+            }
         },
 
         onSideNavButtonPress: function () {
@@ -41,6 +74,27 @@ sap.ui.define([
                 oToggleButton.setTooltip('Small Size Navigation');
             }
         },
+        onSearch: function (oEvent) {
+            // Get the search query
+            var sQuery = oEvent.getParameter("query");
+    
+            // Build filters based on the search query
+            var aFilters = [];
+            if (sQuery) {
+                aFilters.push(new sap.ui.model.Filter({
+                    filters: [
+                        new sap.ui.model.Filter("slotno", sap.ui.model.FilterOperator.Contains, sQuery),
+                        new sap.ui.model.Filter("type", sap.ui.model.FilterOperator.Contains, sQuery),
+                    ],
+                    and: false
+                }));
+            }
+            // Get the table and binding
+            var oTable = this.byId("allSlotsTable");
+            var oBinding = oTable.getBinding("items");
+            // Apply the filters to the binding
+            oBinding.filter(aFilters);
+        },
         
         onAddButtonPress: function(){
             if (!this.byId("addDialog")) {
@@ -59,43 +113,34 @@ sap.ui.define([
             this.byId("addDialog").close();
         },
 
-        onSaveDialog: function () {
-            var oView = this.getView();
-            var oDialog = this.byId("addDialog");
-        
-            var sSlotNo = oView.byId("inputSlotNo").getValue().trim(); // Trim whitespace
-            var sType = oView.byId("inputType").getSelectedItem().getKey();
-        
-            // Validate slot number format (case insensitive and maximum 4 characters)
-            if (!sSlotNo || !/^s.{0,3}$/i.test(sSlotNo)) {
-                MessageBox.error("Slot no must start with 'S' and have a maximum of 4 characters.");
-                return;
-            }
-        
-            // Check if the slot number already exists
-            var oModel = this.getView().getModel();
-            var aData = oModel.getProperty("/rows");
-        
-            var existingSlot = aData.find(function (slot) {
-                return slot.slotno.toLowerCase() === sSlotNo.toLowerCase();
-            });
-        
-            if (existingSlot) {
-                MessageBox.error("Slot no already exists. Please enter a different slot number.");
-                return;
-            }
-        
-            // Add the new slot to the data
-            aData.push({
-                slotno: sSlotNo,
-                type: sType
-            });
-        
-            oModel.setProperty("/rows", aData);
-        
-            oDialog.close();
+        onSaveParkingSlot: async function () {
+            
         },
-        
 
+
+
+
+
+        onExport: function() {
+            var aCols, oBinding, oSettings, oSheet, oTable;
+
+            oTable = this.byId('assignedSlotsTable');
+            oBinding = oTable.getBinding('items');
+            aCols = this.createColumnConfig();
+
+            oSettings = {
+                workbook: { columns: aCols },
+                dataSource: oBinding,
+                fileName: 'Assigned Slots.xlsx'
+            };
+         oSheet = new Spreadsheet(oSettings);
+            oSheet.build()
+                .then(function() {
+                    MessageToast.show('Spreadsheet export has finished');
+                })
+                .finally(function() {
+                    oSheet.destroy();
+                });
+        },
     });
 });
