@@ -116,9 +116,9 @@
                     >
                         <Table
                             id="allSlotsTable"
-                            mode="SingleSelectMaster"
                             alternateRowColors="true"
                             items="{/Parkingslots}"
+                            
                         >
                             <headerToolbar>
                                 <Toolbar id="allSlotstableToolbar">
@@ -192,6 +192,7 @@
                             id="assignedSlotsTable"
                             inset="false"
                             items="{/Parkinglotassign}"
+                            mode="MultiSelect"
                         >
                             <headerToolbar>
                                 <Toolbar id="assignedSlotstableToolbar">
@@ -463,10 +464,99 @@
                         height="100%"
                         class="sapUiContentPadding"
                     >
-                        <Text
-                            id="Pag6Text"
-                            text="Reservation"
-                        />
+  
+                        <Table
+                            id="reservationsTable"
+                            inset="false"
+                            items=""
+                            mode="MultiSelect"
+                        >
+                            <headerToolbar>
+                                <Toolbar id="reservationstableToolbar">
+                                    <Title
+                                        id="reservationsableTitle"
+                                        text="Reservations"
+                                        titleStyle="H3"
+                                    />
+                                    <ToolbarSpacer id="reservationstoolbarspacer"></ToolbarSpacer>
+                                    <SearchField id="reservationsSearchField2" width="12rem" placeholder="Search" search="onSearch" />
+                                    <Button id="reservations_IDGenButton4" class="black-background" text="Approve" type="Emphasized" />
+                                </Toolbar>
+                            </headerToolbar>
+
+                            <columns>
+                                <Column id="reservationscolumn1">
+                                    <Text
+                                        id="reservationscolumn1Text"
+                                        text="Vehicle no"
+                                    />
+                                </Column>
+                                <Column id="reservationscolumn2">
+                                    <Text
+                                        id="reservationscolumn2Text"
+                                        text="Driver name"
+                                    />
+                                </Column>
+                                <Column id="reservationscolumn3">
+                                    <Text
+                                        id="reservationscolumn3Text"
+                                        text="Phone number"
+                                    />
+                                </Column>
+                                <Column id="reservationscolumn4">
+                                    <Text
+                                        id="reservationscolumn4Text"
+                                        text="Date"
+                                    />
+                                </Column>
+                                <Column id="reservationscolumn5">
+                                    <Text
+                                        id="reservationscolumn5Text"
+                                        text="Parking-lot no"
+                                    />
+                                </Column>
+                                <Column id="reservationscolumn6">
+                                    <Text
+                                        id="reservationscolumn6Text"
+                                        text="Type (Inward / Out-ward)"
+                                    />
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem id="reservationscolumnListItem">
+                                    <cells>
+                                        <Text
+                                            id="reservationscellText1"
+                                            text="{}"
+                                        />
+                                        <Text
+                                            id="reservationscellText2"
+                                            text="{}"
+                                        />
+                                        <Text
+                                            id="reservationscellText3"
+                                            text="{}"
+                                        />
+                                        <Text
+                                            id="reservationscellText4"
+                                            text="{}"
+                                        />
+                                        <Text
+                                            id="reservationscellText5"
+                                            text="{}"
+                                        />
+                                        <Text
+                                            id="reservationscellText6"
+                                            text="{}"
+                                        />
+                                        <Text
+                                            id="reservationscellText7"
+                                            text="{}"
+                                        />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
                     </ScrollContainer>
                 </pages>
             </NavContainer>

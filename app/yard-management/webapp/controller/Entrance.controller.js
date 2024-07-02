@@ -12,23 +12,13 @@ sap.ui.define([
 
 ], function (Device, Controller, JSONModel, Popover, Button, library, MessageToast,MessageBox,exportLibrary,Spreadsheet) {
     "use strict";
-    var EdmType = exportLibrary.EdmType;
+    var EdmType = exportLibrary.EdmType;//Export table
     return Controller.extend("com.app.yardmanagement.controller.Entrance", {
 
         onInit: function () {
             
         },
-        createColumnConfig: function() {
-            return [
-                { label: 'Slot no', property: 'parkingslots_slotno', type: EdmType.String },
-                { label: 'Type (Inward / Outward)', property: 'parkingslots/type', type: EdmType.String },
-                { label: 'Driver name', property: 'driverName', type: EdmType.String},
-                { label: 'Phone no', property: 'PhoneNo', type: EdmType.String },
-                { label: 'Vehicle no', property: 'vehicleNo', type: EdmType.String },
-                { label: 'Time', property: 'time', type: EdmType.String},
-                { label: 'Time', property: 'time', type: EdmType.String }
-            ];
-        },
+        
 
 
         onSelectItem: function (oEvent) {
@@ -74,28 +64,73 @@ sap.ui.define([
                 oToggleButton.setTooltip('Small Size Navigation');
             }
         },
+        // onSearch: function (oEvent) {
+        //     // Get the search query
+        //     var sQuery = oEvent.getParameter("query");
+    
+        //     // Build filters based on the search query
+        //     var aFilters = [];
+        //     if (sQuery) {
+        //         aFilters.push(new sap.ui.model.Filter({
+        //             filters: [
+        //                 new sap.ui.model.Filter("slotno", sap.ui.model.FilterOperator.Contains, sQuery),
+        //                 new sap.ui.model.Filter("type", sap.ui.model.FilterOperator.Contains, sQuery),
+        //             ],
+        //             and: false
+        //         }));
+        //     }
+        //     // Get the table and binding
+        //     var oTable = this.byId("allSlotsTable");
+        //     var oBinding = oTable.getBinding("items");
+        //     // Apply the filters to the binding
+        //     oBinding.filter(aFilters);
+        // },
         onSearch: function (oEvent) {
             // Get the search query
             var sQuery = oEvent.getParameter("query");
-    
-            // Build filters based on the search query
+            // Get the ID of the search field that triggered the search
+            var sSearchFieldId = oEvent.getSource().getId();
+            
+            // Determine the target table based on the search field ID
+            var oTable;
             var aFilters = [];
-            if (sQuery) {
-                aFilters.push(new sap.ui.model.Filter({
-                    filters: [
-                        new sap.ui.model.Filter("slotno", sap.ui.model.FilterOperator.Contains, sQuery),
-                        new sap.ui.model.Filter("type", sap.ui.model.FilterOperator.Contains, sQuery),
-                    ],
-                    and: false
-                }));
+
+            if (sSearchFieldId.includes("SearchField1")) {
+                oTable = this.byId("allSlotsTable");
+                // Build filters based on the search query for Parkingslots
+                if (sQuery) {
+                    aFilters.push(new sap.ui.model.Filter({
+                        filters: [
+                            new sap.ui.model.Filter("slotno", sap.ui.model.FilterOperator.Contains, sQuery),
+                            new sap.ui.model.Filter("type", sap.ui.model.FilterOperator.Contains, sQuery),
+                        ],
+                        and: false
+                    }));
+                }
+            } else if (sSearchFieldId.includes("SearchField2")) {
+                oTable = this.byId("assignedSlotsTable");
+                // Build filters based on the search query for Parkinglotassign
+                if (sQuery) {
+                    aFilters.push(new sap.ui.model.Filter({
+                        filters: [
+                            new sap.ui.model.Filter("parkingslots_slotno", sap.ui.model.FilterOperator.Contains, sQuery),
+                            new sap.ui.model.Filter("parkingslots/type", sap.ui.model.FilterOperator.Contains, sQuery),
+                            new sap.ui.model.Filter("vehicleNo", sap.ui.model.FilterOperator.Contains, sQuery),
+                            new sap.ui.model.Filter("driverName", sap.ui.model.FilterOperator.Contains, sQuery),
+                            new sap.ui.model.Filter("PhoneNo", sap.ui.model.FilterOperator.Contains, sQuery)
+                        ],
+                        and: false
+                    }));
+                }
             }
-            // Get the table and binding
-            var oTable = this.byId("allSlotsTable");
-            var oBinding = oTable.getBinding("items");
-            // Apply the filters to the binding
-            oBinding.filter(aFilters);
+
+            // Get the binding of the target table and apply the filters
+            if (oTable) {
+                var oBinding = oTable.getBinding("items");
+                oBinding.filter(aFilters);
+            }
         },
-        
+
         onAddButtonPress: function(){
             if (!this.byId("addDialog")) {
                 this.loadFragment({
@@ -116,11 +151,18 @@ sap.ui.define([
         onSaveParkingSlot: async function () {
             
         },
-
-
-
-
-
+        //Export table as xl format
+        createColumnConfig: function() {
+            return [
+                { label: 'Slot no', property: 'parkingslots_slotno', type: EdmType.String },
+                { label: 'Type (Inward / Outward)', property: 'parkingslots/type', type: EdmType.String },
+                { label: 'Driver name', property: 'driverName', type: EdmType.String},
+                { label: 'Phone no', property: 'PhoneNo', type: EdmType.String },
+                { label: 'Vehicle no', property: 'vehicleNo', type: EdmType.String },
+                { label: 'Time', property: 'time', type: EdmType.String},
+                { label: 'Time', property: 'time', type: EdmType.String }
+            ];
+        },
         onExport: function() {
             var aCols, oBinding, oSettings, oSheet, oTable;
 
